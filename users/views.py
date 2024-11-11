@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from users.models import User
 from users.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
-
+from products.models import Basket
 
 
 def login(request):
@@ -52,7 +52,9 @@ def profile(request):
     else:
         form = UserProfileForm(instance=request.user)
     context = {
-        'title': 'store - profile', 'form': form
+        'title': 'store - profile',
+        'form': form,
+        'baskets': Basket.objects.filter(user=request.user),
     }
     return render(request, 'users/profile.html', context)
 

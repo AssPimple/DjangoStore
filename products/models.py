@@ -1,6 +1,9 @@
 
 from django.conf import settings
 from django.db import models
+from django.template.defaultfilters import default
+
+from users.models import User
 
 
 
@@ -34,5 +37,11 @@ class Product(models.Model):
 
 
 
+class Basket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+    created_timeship = models.DateTimeField(auto_now_add=True)
 
-
+    def __str__(self):
+        return f'Корзина для {self.user.username} | Продукт {self.product.name}'
