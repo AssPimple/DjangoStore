@@ -1,10 +1,5 @@
-
-from django.conf import settings
 from django.db import models
-from django.template.defaultfilters import default
-
 from users.models import User
-
 
 
 class ProductCategory(models.Model):
@@ -35,12 +30,14 @@ class Product(models.Model):
     def __str__(self):
         return f'Продукт: {self.name} | Категория: {self.category.name}'
 
+
 class BasketQuerySet(models.QuerySet):
     def total_sum(self):
         return sum(basket.sum() for basket in self)
 
     def total_quantity(self):
         return sum(basket.quantity for basket in self)
+
 
 class Basket(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
@@ -55,4 +52,3 @@ class Basket(models.Model):
 
     def sum(self):
         return self.product.price * self.quantity
-

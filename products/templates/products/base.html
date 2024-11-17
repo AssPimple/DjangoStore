@@ -45,7 +45,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item" href="{% url 'users:profile' %}">Профиль</a>
+                                <a class="dropdown-item" href="{% url 'users:profile' user.id %}">Профиль</a>
                             </li>
                             <li><a class="dropdown-item" href="№">Заказы</a></li>
                             {% if user.is_superuser or user.is_staff %}
@@ -59,9 +59,10 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{% url 'users:logout' %}">
-                                    Выйти
-                                </a>
+                                <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Выйти</button>
+                                </form>
                             </li>
                         </ul>
                     </li>
