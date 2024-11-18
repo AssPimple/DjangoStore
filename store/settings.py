@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from tracemalloc import DomainFilter
 
 from django.conf.global_settings import LOGIN_REDIRECT_URL, EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, \
     EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, EMAIL_BACKEND
@@ -28,8 +29,8 @@ SECRET_KEY = 'django-insecure-7ej#r-r#ngvog^m7khxy-#6k0yz#r_kkl53c80@_c8(rsmhts=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
+DOMAIN_NAME = 'http://localhost:8000'
 
 # Application definition
 
@@ -144,9 +145,9 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Email
-EMAIL_HOST = ''
-EMAIL_PORT = ''
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = ''
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = '2525'
+EMAIL_HOST_USER = '07700660gg@mail.ru'
+EMAIL_HOST_PASSWORD = '4ZbHFH16kbLTeDrkd6Eh'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False

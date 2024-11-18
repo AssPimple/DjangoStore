@@ -1,12 +1,14 @@
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import UpdateView, TemplateView
 from django.views.generic.edit import CreateView
 
+from common.views import TitleMixin
 from products.models import Basket
 from users.forms import UserLoginForm, UserProfileForm, UserRegistrationForm
-from users.models import User
+from users.models import User, EmailVerification
 
 
 # CBV
@@ -90,3 +92,29 @@ class UserProfileView(UpdateView):
 #         'baskets': Basket.objects.filter(user=request.user),
 #     }
 #     return render(request, 'users/profile.html', context)
+
+
+class EmailVerificationView(TitleMixin, TemplateView):
+    title = 'Store - подтверждение электронной почты'
+    template_name = 'users/email_verification.html'
+
+    def get(self, request, *args, **kwargs):
+        code = kwargs['code']
+        email = kwargs['email']
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return HttpResponseRedirect(reverse('index'))
+
+        try:
+            email_verification = EmailVerification.objects.get(user=user, code=code)
+            if not email_verification.is_expired:
+                user.is_verified_email = True
+                user.save()
+                return super().get(request, *args, **kwargs)
+            else:
+                # Логика обработки истекшего кода
+                return HttpResponseRedirect(reverse('index'))
+        except EmailVerification.DoesNotExist:
+            return HttpResponseRedirect(reverse('index'))
