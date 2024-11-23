@@ -1,5 +1,6 @@
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from common.views import TitleMixin
 from products.models import ProductCategory, Product, Basket
@@ -20,9 +21,10 @@ class IndexView(TitleMixin,TemplateView):
 
 # CBV
 class ProductsListView(TitleMixin,ListView):
+
     model = Product
     template_name = 'products/products.html'
-    paginate_by = 1
+    paginate_by = 3
     title = 'Store - каталог'
 
     def get_queryset(self):
@@ -32,7 +34,8 @@ class ProductsListView(TitleMixin,ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductsListView, self).get_context_data()
-        context['categories'] = ProductCategory.objects.all()
+        context['categories'] = ProductCategory.objects.annotate(num_products=Count('product')).filter(
+            num_products__gt=0)
         return context
 
 
