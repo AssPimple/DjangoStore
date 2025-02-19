@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,7 +26,7 @@ SECRET_KEY = 'django-insecure-7ej#r-r#ngvog^m7khxy-#6k0yz#r_kkl53c80@_c8(rsmhts=
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-DOMAIN_NAME = 'http://localhost:8000'
+DOMAIN_NAME = 'http://127.0.0.1:8000'
 
 # Application definition
 
@@ -39,14 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.humanize',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
+    "debug_toolbar",
 
     'products',
+    'orders',
     'users',
+
 
 ]
 
@@ -58,7 +61,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'store.urls'
@@ -74,12 +78,20 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'products.context_processors.baskets',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'store.wsgi.application'
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    'localhost',
+    # ...
+]
 
 
 # Database
@@ -96,6 +108,12 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -182,3 +200,12 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     },
 }
+
+# Celery Configuration Options
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+
+
+STRIPE_PUBLIC_KEY = 'pk_test_51QRVl2K1GOnWe9Q9koWIPXa7wQzDFAk6oolrdDDkJn7HYw03UDjZQMr1igv7vtNe6up6151nsaUWwrxlJHWxAUge00ZVTEpPQL'
+STRIPE_SECRET_KEY = 'sk_test_51QRVl2K1GOnWe9Q9kObta8bl00YXJiRJHc2yAqISpmj2X9qpdl7fjcjSaQPfiaPUhJ5cbwnSLWwBJHqEkeJpWPfM00faEmh66X'
+STRIPE_WEBHOOK_SECRET = 'whsec_3412a9f419b09cbbfb0fb149df361e2d8607857fb472a981c14ae44e859cadc0'

@@ -2,7 +2,6 @@ from http import HTTPStatus
 
 from django.test import TestCase
 from django.urls import reverse
-from unicodedata import category
 
 from products.models import Product, ProductCategory
 

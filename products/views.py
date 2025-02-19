@@ -1,16 +1,15 @@
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import HttpResponseRedirect
-from common.views import TitleMixin
-from products.models import ProductCategory, Product, Basket
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 
+from common.views import TitleMixin
+from products.models import Basket, Product, ProductCategory
 
 
 # CBV
-class IndexView(TitleMixin,TemplateView):
+class IndexView(TitleMixin, TemplateView):
     template_name = 'products/index.html'
     title = 'Store'
 
@@ -20,8 +19,7 @@ class IndexView(TitleMixin,TemplateView):
 #     return render(request, 'products/index.html')
 
 # CBV
-class ProductsListView(TitleMixin,ListView):
-
+class ProductsListView(TitleMixin, ListView):
     model = Product
     template_name = 'products/products.html'
     paginate_by = 3

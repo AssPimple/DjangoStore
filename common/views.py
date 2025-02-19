@@ -1,6 +1,3 @@
-from django.template.defaultfilters import title
-
-
 class TitleMixin:
     title = None
 
